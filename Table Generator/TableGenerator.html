@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="jquery.js"></script>
+    <script src="AjaxRequest.js"></script>
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        $('#load').click(load);
+
+    });
+    function load() {
+        var $table = $('<table/>');
+      $table.css('margin-top', '20px');
+        $table.id='table';
+        $table.css('border-collapse', 'collapse');
+        $('#container').append($table);
+
+        $.ajax({
+            url: 'http://localhost:63342/jQueryHomeworks/AjaxRequest.js',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (data) {
+                var json = $.parseJSON(data);
+
+                var keys = Object.keys(json[0]);
+                var headerRow = $('<tr/>');
+                headerRow
+                        .appendTo($table);
+
+                $.each(keys, function (i, keys) {
+                    var text;
+                    text = keys.replace(/\w/, keys[0].toUpperCase());
+                    $('<td/>')
+                            .appendTo(headerRow)
+                            .html(text)
+                            .css('background', '#76923C')
+                            .css('text-align', 'center')
+                            .css('border', 'solid 1px #000');
+                });
+
+                $.each(json, function () {
+                    var row = $('<tr/>');
+                    row.appendTo($table)
+                            .insertAfter('#header');
+                    $.each(this, function (name, value) {
+                        $('<td/>')
+                                .appendTo(row)
+                                .html(value)
+                                .css('border', 'solid 1px #000');
+                    });
+                });
+            },
+            fail: function (er) {
+                console.log(er);
+        }
+        })
+    }
+
+</script>
+<label for="load"></label>
+<input type="button" name="button" id="load" value="Press"/>
+
+<div id="container"></div>
+</body>
+</html>
